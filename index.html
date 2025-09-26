@@ -6,22 +6,28 @@
     <title>Filterable List Component</title>
   </head>
   <body>
-    <header id="header" role="heading">
+    <header id="header">
       <h1>Filterable Event List</h1>
     </header>
-    <main role="main" id="main">
+    <main id="main">
       <section class="section">
-        <form role="search">
-          <div id="search-box">
-            <label>Search for an event</label>
-            <input type="search" />
+        <form role="search" aria-label="Filter events">
+          <div class="search-box">
+            <label for="search">Search for an event</label>
+            <input type="search" id="search" name="search" />
           </div>
-          <div id="filter">
-            <select id="events">
-              <option value="default">Select an event</option>
+          <div class="filter">
+            <label for="events">Category</label>
+            <select id="events" name="categories">
+              <option value="">All categories</option>
             </select>
           </div>
         </form>
+      </section>
+      <section id="results">
+        <h2>Results</h2>
+        <ul class="list"></ul>
+        <p hidden id="empty" role="status">No results found.</p>
       </section>
     </main>
   </body>
