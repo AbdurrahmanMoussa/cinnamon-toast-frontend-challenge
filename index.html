@@ -8,12 +8,33 @@
   </head>
   <body>
     <header class="container">
-      <h1>Filterable Event List</h1>
+      <h1>Filterable List Component</h1>
     </header>
     <main class="container">
-      <section class="section">
-        <form role="search" aria-label="Filter events">
-          <h2>Search for an event</h2>
+      <section>
+        <!-- Search form -->
+        <form id="form" role="search" aria-label="Filter events">
+          <div class="search-header">
+            <h2>Search for an event</h2>
+            <svg
+              class="info"
+              aria-hidden="true"
+              focusable="false"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12" y2="8" />
+            </svg>
+          </div>
           <div class="search-grid">
             <div class="filter">
               <label for="events" class="visually-hidden">Category</label>
@@ -21,6 +42,7 @@
                 <option value="">All categories</option>
               </select>
             </div>
+
             <div class="search-box">
               <label for="search" class="visually-hidden"
                 >Search for an event</label
@@ -35,11 +57,31 @@
           </div>
         </form>
       </section>
+
       <section id="results">
-        <h2>Results</h2>
-        <ul class="list"></ul>
+        <section class="results-header">
+          <h2>Results</h2>
+          <p id="amount"></p>
+        </section>
+        <!-- Sort controls -->
+        <div class="sort-controls">
+          <label for="sort" class="visually-hidden">Sort results</label>
+          <select id="sort" name="sort">
+            <option value="">Sort by</option>
+            <option value="new">Newest</option>
+            <option value="old">Oldest</option>
+            <option value="az">A-Z</option>
+            <option value="za">Z-A</option>
+          </select>
+        </div>
+        <!-- Results list-->
+        <div class="results-container">
+          <ul class="list"></ul>
+        </div>
+
         <p hidden id="empty" role="status">No results found.</p>
       </section>
     </main>
+    <script src="script.js"></script>
   </body>
 </html>
