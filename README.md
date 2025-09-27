@@ -4,7 +4,7 @@ For this challenge, I chose to complete the filterable list component. I felt li
 
 ## How to run:
 
-- Clone or download the repository
+- Clone or download the repository.
 - Open `index.html` in any web browser.
 - Interact with the search bar, category filter, and sort dropdown to see the list update.
 
