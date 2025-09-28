@@ -59,18 +59,30 @@
       <section id="results">
         <section class="results-header">
           <h2>Results</h2>
-          <p id="amount"></p>
+          <p id="amount" aria-live="polite"></p>
         </section>
-        <!-- Sort controls -->
-        <div class="sort-controls">
-          <label for="sort" class="visually-hidden">Sort results</label>
-          <select id="sort" name="sort">
-            <option value="">Sort by</option>
-            <option value="new">Newest</option>
-            <option value="old">Oldest</option>
-            <option value="az">A-Z</option>
-            <option value="za">Z-A</option>
-          </select>
+        <div class="results-filters">
+          <!-- Sort controls -->
+          <div class="sort-controls">
+            <label for="sort" class="visually-hidden">Sort results</label>
+            <select id="sort" name="sort">
+              <option value="">Sort by</option>
+              <option value="new">Newest</option>
+              <option value="old">Oldest</option>
+              <option value="az">A-Z</option>
+              <option value="za">Z-A</option>
+            </select>
+          </div>
+          <div class="close-filter-tab" hidden>
+            <button
+              class="filter-tab"
+              aria-label="Clear category filter"
+              type="button"
+            >
+              <span id="category-tab"></span>
+              <span id="close" aria-hidden="true">&times;</span>
+            </button>
+          </div>
         </div>
         <!-- Results list-->
         <div class="results-container">
@@ -79,6 +91,9 @@
         <p hidden id="empty" role="status">No results found.</p>
       </section>
     </main>
+    <footer class="footer">
+      <p>Filterable List Component &copy; 2025</p>
+    </footer>
     <script src="script.js"></script>
   </body>
 </html>

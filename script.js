@@ -14,26 +14,30 @@ const events = [
   { title: "Team Building Workshop", category: "Work", date: "2025-11-13" },
 ];
 
-// Retrieve necessary elements to manipulate
+// Get DOM elements for updates
 const $ulElement = document.querySelector(".list");
 const $emptyElement = document.getElementById("empty");
 const $searchElement = document.getElementById("search");
 const $amountElement = document.getElementById("amount");
 const $formElement = document.getElementById("form");
 const $sortElement = document.getElementById("sort");
+const $filterTab = document.querySelector(".close-filter-tab");
 
 const fetchEvents = (arr) => {
+  const frag = document.createDocumentFragment();
   $ulElement.textContent = "";
 
   // Show "No results" message if array is empty
   if (!arr.length) {
     $emptyElement.hidden = false;
-    $amountElement.innerText = 0;
+    $amountElement.textContent = "0 results";
     return;
   }
 
   $emptyElement.hidden = true;
-  $amountElement.innerText = arr.length;
+
+  const n = arr.length;
+  $amountElement.textContent = `${n} result${n === 1 ? "" : "s"}`;
 
   // Loop through events to create card structure and add content from events array into html elements
   arr.forEach((e, i) => {
@@ -43,25 +47,33 @@ const fetchEvents = (arr) => {
     const $spanElement = document.createElement("span");
     const $timeElement = document.createElement("time");
 
+    const options = { year: "numeric", month: "short", day: "numeric" };
+
     $h3Element.textContent = e.title;
     $spanElement.textContent = e.category;
+
     $timeElement.setAttribute("datetime", e.date);
-    $timeElement.textContent = e.date;
+    $timeElement.textContent = new Date(e.date).toLocaleDateString(
+      undefined,
+      options
+    );
 
     $articleElement.append($h3Element, $spanElement, $timeElement);
     $liElement.appendChild($articleElement);
     $liElement.classList.add("list-item");
 
-    // Add delay prior to loading list items
+    /// Stagger item animations (each appears 0.1s after the previous)
     $liElement.style.animationDelay = `${i * 0.1}s`;
-
-    $ulElement.append($liElement);
+    frag.appendChild($liElement);
   });
+
+  $ulElement.textContent = "";
+  $ulElement.appendChild(frag);
 };
 
 const $selectElement = document.getElementById("events");
 
-// Create unique array of categories before sorting
+// Extract unique categories from events and sort alphabetically for dropdown
 const categories = [...new Set(events.map((ev) => ev.category))].sort();
 
 for (const cat of categories) {
@@ -89,6 +101,7 @@ $searchElement.addEventListener("input", (evt) => {
 });
 
 // Update UI on sort
+
 $sortElement.addEventListener("change", () => {
   updateUI();
 });
@@ -110,6 +123,12 @@ function updateUI() {
     return matchCat && matchSearch;
   });
 
+  const $categoryTab = document.getElementById("category-tab");
+
+  // Show filter only when category is selected
+  $filterTab.hidden = !currCategory;
+  if (currCategory) $categoryTab.textContent = currCategory;
+
   const sortKey = $sortElement.value;
 
   // Apply sort if comparator exists
@@ -121,6 +140,15 @@ function updateUI() {
   // Render filtered and sorted events
   fetchEvents(resultsSorted);
 }
+
+const $close = document.getElementById("close");
+
+// Clear category on close and reset select value
+$close.addEventListener("click", () => {
+  currCategory = "";
+  $selectElement.value = "";
+  updateUI();
+});
 
 // Render events after DOM is loaded
 window.addEventListener("DOMContentLoaded", () => {
