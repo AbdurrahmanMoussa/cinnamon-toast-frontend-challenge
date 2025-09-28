@@ -1,6 +1,6 @@
 # Challenge 2: Filterable List Component
 
-For this challenge, I chose to complete the filterable list component. I felt like this would be the one that would be most challenging and rewarding. I ended up really enjoying the process and working through the bonus features.
+For this challenge, I chose to complete the filterable list component. I ended up really enjoying the process and working through the bonus features.
 
 ## How to run:
 
@@ -10,10 +10,11 @@ For this challenge, I chose to complete the filterable list component. I felt li
 
 ## Notes
 
-- Implemented all the **bonus features**:
+- Implemented the following **bonus features**:
   - Animations when filtering
   - Sorting by date
   - Alphabetical sorting (A–Z, Z–A)
   - Count of visible results
   - Accessible dropdowns and ARIA roles
-- Added additional styling and card hover effects to make the list more engaging and responsive
+  - Removable filter chip for category
+- Added additional styling and card hover effects to make the list more engaging and responsive.
