@@ -1,17 +1,77 @@
 // Create array of objects to hold events
 const events = [
-  { title: "Local Meetup", category: "Community", date: "2025-10-10" },
-  { title: "Team Lunch", category: "Work", date: "2025-10-14" },
-  { title: "Web Dev Meetup", category: "Work", date: "2025-11-16" },
-  { title: "Final Exam Prep", category: "School", date: "2025-11-28" },
-  { title: "WordPress Conf", category: "Community", date: "2025-12-05" },
-  { title: "Book Club", category: "Audience", date: "2025-12-12" },
-  { title: "React Study Session", category: "School", date: "2025-10-16" },
-  { title: "Cinnamon Toast Day", category: "Community", date: "2025-10-20" },
-  { title: "Web Dev Workshop", category: "Audience", date: "2025-11-02" },
-  { title: "Meet and Greet", category: "Work", date: "2025-11-07" },
-  { title: "Client Presentation", category: "Work", date: "2025-11-11" },
-  { title: "Team Building Workshop", category: "Work", date: "2025-11-13" },
+  {
+    title: "Local Meetup",
+    category: "Community",
+    date: "2025-10-10",
+    tags: ["networking", "community"],
+  },
+  {
+    title: "Team Lunch",
+    category: "Work",
+    date: "2025-10-14",
+    tags: ["team", "casual"],
+  },
+  {
+    title: "Web Dev Meetup",
+    category: "Work",
+    date: "2025-11-16",
+    tags: ["networking", "react"],
+  },
+  {
+    title: "Final Exam Prep",
+    category: "School",
+    date: "2025-11-28",
+    tags: ["study", "team"],
+  },
+  {
+    title: "WordPress Conf",
+    category: "Community",
+    date: "2025-12-05",
+    tags: ["conference", "community"],
+  },
+  {
+    title: "Book Club",
+    category: "Audience",
+    date: "2025-12-12",
+    tags: ["books", "discussion"],
+  },
+  {
+    title: "React Study Session",
+    category: "School",
+    date: "2025-10-16",
+    tags: ["react", "study"],
+  },
+  {
+    title: "Cinnamon Toast Day",
+    category: "Community",
+    date: "2025-10-20",
+    tags: ["casual", "community"],
+  },
+  {
+    title: "Web Dev Workshop",
+    category: "Audience",
+    date: "2025-11-02",
+    tags: ["react", "conference"],
+  },
+  {
+    title: "Meet and Greet",
+    category: "Work",
+    date: "2025-11-07",
+    tags: ["networking", "team"],
+  },
+  {
+    title: "Client Presentation",
+    category: "Work",
+    date: "2025-11-11",
+    tags: ["conference", "team"],
+  },
+  {
+    title: "Team Building Workshop",
+    category: "Work",
+    date: "2025-11-13",
+    tags: ["team", "casual"],
+  },
 ];
 
 // Get DOM elements for updates
@@ -21,7 +81,8 @@ const $searchElement = document.getElementById("search");
 const $amountElement = document.getElementById("amount");
 const $formElement = document.getElementById("form");
 const $sortElement = document.getElementById("sort");
-const $filterTab = document.querySelector(".close-filter-tab");
+const $categoryFilter = document.querySelector(".category-filter-container");
+const $tagFilter = document.querySelector(".tag-filter-container");
 
 const fetchEvents = (arr) => {
   const frag = document.createDocumentFragment();
@@ -46,7 +107,15 @@ const fetchEvents = (arr) => {
     const $h3Element = document.createElement("h3");
     const $spanElement = document.createElement("span");
     const $timeElement = document.createElement("time");
+    const $tagsContainer = document.createElement("div");
+    $tagsContainer.classList.add("tags");
 
+    e.tags.forEach((t) => {
+      const $tagElement = document.createElement("span");
+      $tagElement.classList.add("tag");
+      $tagElement.textContent = t;
+      $tagsContainer.appendChild($tagElement);
+    });
     const options = { year: "numeric", month: "short", day: "numeric" };
 
     $h3Element.textContent = e.title;
@@ -58,7 +127,12 @@ const fetchEvents = (arr) => {
       options
     );
 
-    $articleElement.append($h3Element, $spanElement, $timeElement);
+    $articleElement.append(
+      $h3Element,
+      $spanElement,
+      $timeElement,
+      $tagsContainer
+    );
     $liElement.appendChild($articleElement);
     $liElement.classList.add("list-item");
 
@@ -67,17 +141,25 @@ const fetchEvents = (arr) => {
     frag.appendChild($liElement);
   });
 
-  $ulElement.textContent = "";
   $ulElement.appendChild(frag);
 };
 
-const $selectElement = document.getElementById("events");
+const $tagSelect = document.getElementById("select-tag");
+const allTags = events.map((ev) => ev.tags).flat();
+
+const uniqueTags = [...new Set(allTags)].sort();
+
+for (const tag of uniqueTags) {
+  $tagSelect.add(new Option(tag));
+}
+
+const $categorySelect = document.getElementById("events");
 
 // Extract unique categories from events and sort alphabetically for dropdown
-const categories = [...new Set(events.map((ev) => ev.category))].sort();
+const uniqueCategories = [...new Set(events.map((ev) => ev.category))].sort();
 
-for (const cat of categories) {
-  $selectElement.add(new Option(cat));
+for (const cat of uniqueCategories) {
+  $categorySelect.add(new Option(cat));
 }
 
 // Prevent form submission (keeps search/filter client-side only)
@@ -87,9 +169,16 @@ $formElement.addEventListener("submit", (e) => {
 
 let currCategory = "";
 let currSearch = "";
+let currTag = "";
+
+// Update UI when tag changes
+$tagSelect.addEventListener("change", (evt) => {
+  currTag = evt.target.value;
+  updateUI();
+});
 
 // Update UI when category changes
-$selectElement.addEventListener("change", (evt) => {
+$categorySelect.addEventListener("change", (evt) => {
   currCategory = evt.target.value;
   updateUI();
 });
@@ -108,8 +197,8 @@ $sortElement.addEventListener("change", () => {
 
 // Create comparator functions for sort options
 const comparators = {
-  new: (a, b) => new Date(b.date) - new Date(a.date),
-  old: (a, b) => new Date(a.date) - new Date(b.date),
+  new: (a, b) => b.date.localeCompare(a.date),
+  old: (a, b) => a.date.localeCompare(b.date),
   az: (a, b) => a.title.localeCompare(b.title),
   za: (a, b) => b.title.localeCompare(a.title),
 };
@@ -118,16 +207,23 @@ const comparators = {
 function updateUI() {
   const results = events.filter((ev) => {
     const matchCat = !currCategory || ev.category === currCategory;
+    const matchTag = !currTag || ev.tags.includes(currTag);
     const matchSearch =
-      !currSearch || ev.title.toLowerCase().includes(currSearch);
-    return matchCat && matchSearch;
+      !currSearch ||
+      ev.title.toLowerCase().includes(currSearch) ||
+      ev.tags.some((t) => t.toLowerCase().includes(currSearch));
+    return matchCat && matchSearch && matchTag;
   });
 
   const $categoryTab = document.getElementById("category-tab");
+  const $tagTab = document.getElementById("tag-tab");
 
-  // Show filter only when category is selected
-  $filterTab.hidden = !currCategory;
+  // Show filters only when category is selected
+  $categoryFilter.hidden = !currCategory;
   if (currCategory) $categoryTab.textContent = currCategory;
+
+  $tagFilter.hidden = !currTag;
+  if (currTag) $tagTab.textContent = currTag;
 
   const sortKey = $sortElement.value;
 
@@ -141,14 +237,27 @@ function updateUI() {
   fetchEvents(resultsSorted);
 }
 
-const $close = document.getElementById("close");
+function closeFilter(type) {
+  if (type === "category") {
+    currCategory = "";
+    $categorySelect.value = "";
+  }
+  if (type === "tag") {
+    currTag = "";
+    $tagSelect.value = "";
+  }
+  updateUI();
+}
+
+const $closeCategory = document.getElementById("close-category");
 
 // Clear category on close and reset select value
-$close.addEventListener("click", () => {
-  currCategory = "";
-  $selectElement.value = "";
-  updateUI();
-});
+$closeCategory.addEventListener("click", () => closeFilter("category"));
+
+const $closeTag = document.getElementById("close-tag");
+
+// Clear tag on close and reset select value
+$closeTag.addEventListener("click", () => closeFilter("tag"));
 
 // Render events after DOM is loaded
 window.addEventListener("DOMContentLoaded", () => {

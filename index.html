@@ -36,10 +36,16 @@
             </svg>
           </div>
           <div class="search-grid">
-            <div class="filter">
+            <div>
               <label for="events" class="visually-hidden">Category</label>
               <select id="events" name="categories">
                 <option value="">All categories</option>
+              </select>
+            </div>
+            <div>
+              <label for="select-tag" class="visually-hidden">Tags</label>
+              <select id="select-tag" name="select-tag">
+                <option value="">All tags</option>
               </select>
             </div>
             <div class="search-box">
@@ -73,15 +79,27 @@
               <option value="za">Z-A</option>
             </select>
           </div>
-          <div class="close-filter-tab" hidden>
-            <button
-              class="filter-tab"
-              aria-label="Clear category filter"
-              type="button"
-            >
-              <span id="category-tab"></span>
-              <span id="close" aria-hidden="true">&times;</span>
-            </button>
+          <div class="filter-chips-container">
+            <div class="category-filter-container" hidden>
+              <button
+                class="filter-tab"
+                aria-label="Clear category filter"
+                type="button"
+              >
+                <span id="category-tab"></span>
+                <span id="close-category" aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="tag-filter-container" hidden>
+              <button
+                class="filter-tab"
+                aria-label="Clear tag filter"
+                type="button"
+              >
+                <span id="tag-tab"></span>
+                <span id="close-tag" aria-hidden="true">&times;</span>
+              </button>
+            </div>
           </div>
         </div>
         <!-- Results list-->

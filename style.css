@@ -14,16 +14,6 @@
   box-sizing: border-box;
 }
 
-.footer {
-  display: flex;
-  justify-content: center;
-  max-width: 70rem;
-  font-size: 0.8rem;
-  color: #3c3b3c;
-  margin-top: 2rem;
-  margin: 2rem auto;
-}
-
 body {
   margin: 0;
   font-family: "Poppins", sans-serif;
@@ -68,22 +58,16 @@ main {
   border: 0;
 }
 
-/* Two-column grid: category select (1/3) + search input (2/3) */
+/* Three-column grid: category select (1/4) + tag select (1/4) + search input (1/2) */
 .search-grid {
   display: grid;
-  grid-template-columns: 4fr 8fr;
+  grid-template-columns: 2fr 2fr 8fr;
   gap: 1rem;
 }
 
-/* Mobile: stack search and filter vertically */
-@media (max-width: 640px) {
-  .search-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 #events,
-#search {
+#search,
+#select-tag {
   display: block;
   width: 100%;
   font-size: clamp(1rem, 2vw, 1.125rem);
@@ -95,6 +79,8 @@ main {
 
 #events:hover,
 #events:active,
+#select-tag:hover,
+#select-tag:active,
 #search:hover,
 #search:active,
 #sort:hover,
@@ -103,6 +89,7 @@ main {
 }
 
 #events:focus-visible,
+#select-tag:focus-visible,
 #search:focus-visible,
 #sort:focus-visible {
   outline: 0.2rem solid var(--focus);
@@ -128,15 +115,8 @@ ul {
   width: 100%;
 }
 
-@media (max-width: 640px) {
-  .list {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  }
-}
-
 article {
   display: grid;
-  grid-template-areas: "title" "category" "time";
 }
 
 .list-item article {
@@ -160,14 +140,6 @@ article {
   transform: translateY(10px);
   animation: fadeInUp 0.4s forwards;
   padding: 1.5rem 1.5rem 1.5rem 2rem;
-  transform: translateY(10px);
-  transition: transform 0.25s ease, box-shadow 0.25s ease,
-    background-position 0.25s ease;
-}
-
-.list-item {
-  padding: 1.5rem 1.5rem 1.5rem 2rem;
-  transform: translateY(10px);
   transition: transform 0.25s ease, box-shadow 0.25s ease,
     background-position 0.25s ease;
   will-change: transform;
@@ -194,7 +166,6 @@ article {
 
 .list-item:hover,
 .list-item:active {
-  cursor: pointer;
   transform: scale(1.02);
 }
 
@@ -210,14 +181,6 @@ article {
   transform: translateX(20px);
 }
 
-.time {
-  grid-area: time;
-}
-
-.category {
-  grid-area: category;
-}
-
 .results-header {
   display: flex;
   justify-content: space-between;
@@ -228,14 +191,6 @@ article {
 
 .results-filters {
   display: flex;
-  justify-content: space-between;
-}
-
-@media (max-width: 640px) {
-  .results-filters {
-    flex-direction: column;
-    margin-bottom: 2rem;
-  }
 }
 
 .filter-tab {
@@ -247,6 +202,7 @@ article {
   align-items: center;
   min-width: 7.5rem;
   color: #2b2b2b;
+  font-size: 0.8rem;
 }
 
 .filter-tab:hover,
@@ -254,7 +210,8 @@ article {
   background-color: rgb(221, 230, 230);
 }
 
-#close {
+#close-category,
+#close-tag {
   margin-left: auto;
   cursor: pointer;
   font-weight: bold;
@@ -275,16 +232,67 @@ article {
   color: #555;
 }
 
-/* Mobile: stack search and filter vertically */
+.tags {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.tag {
+  display: inline-block;
+  margin: 0.25rem 0.4rem 0 0;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  border-radius: 9999px;
+  background-color: #e7f0f0;
+  color: #3c3b3c;
+  font-weight: 500;
+  text-align: center;
+}
+
+.filter-chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: auto;
+  gap: 1rem;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  max-width: 70rem;
+  font-size: 0.8rem;
+  color: #3c3b3c;
+  margin: 2rem auto;
+}
+
+/* Mobile: stack vertically */
 @media (max-width: 640px) {
+  .search-grid {
+    grid-template-columns: 1fr;
+  }
+  .list {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+  .results-filters {
+    flex-direction: column;
+    margin-bottom: 2rem;
+  }
   .results-header {
     flex-direction: column;
     align-items: flex-start;
   }
+  .filter-chips-container {
+    margin: 0;
+  }
+  .filter-tab {
+    align-self: flex-start;
+  }
 }
 
 /* Key frames for list-item animation for filtering */
-
 @keyframes fadeInUp {
   to {
     opacity: 1;

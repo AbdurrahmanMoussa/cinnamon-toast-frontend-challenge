@@ -17,4 +17,5 @@ For this challenge, I chose to complete the filterable list component. I ended u
   - Count of visible results
   - Accessible dropdowns and ARIA roles
   - Removable filter chip for category
+  - Added tags and ability to filter by tag
 - Added additional styling and card hover effects to make the list more engaging and responsive.
