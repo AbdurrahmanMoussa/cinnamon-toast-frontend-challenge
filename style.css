@@ -41,7 +41,7 @@ main {
   display: grid;
   gap: 2rem;
   margin: 0 auto;
-  max-width: 70rem;
+  max-width: 65rem;
   padding: 2rem 2rem;
 }
 
@@ -65,13 +65,19 @@ main {
   gap: 1rem;
 }
 
+article span,
+article time,
+article div {
+  font-size: 0.9rem;
+}
+
 #events,
 #search,
 #select-tag {
   display: block;
   width: 100%;
-  font-size: clamp(1rem, 2vw, 1.125rem);
-  padding: var(--space) 1rem;
+  font-size: 1rem;
+  padding: 0.75rem 0.5rem;
   border: var(--border);
   border-radius: 1rem;
   box-sizing: border-box;
@@ -219,17 +225,19 @@ article {
 
 #sort {
   display: block;
-  font-size: clamp(1rem, 2vw, 1.125rem);
-  padding: var(--space);
+  font-size: 1rem;
+  padding: 0.75rem 0.5rem;
   border: var(--border);
   border-radius: 1rem;
   box-sizing: border-box;
   justify-self: start;
   margin-bottom: 2rem;
+  min-width: 7.5rem;
 }
 
 #amount {
   color: #555;
+  font-size: 0.8rem;
 }
 
 .tags {
@@ -244,7 +252,7 @@ article {
   display: inline-block;
   margin: 0.25rem 0.4rem 0 0;
   padding: 0.35rem 0.75rem;
-  font-size: 0.75rem;
+  font-size: 0.6rem;
   border-radius: 9999px;
   background-color: #e7f0f0;
   color: #3c3b3c;
@@ -262,7 +270,7 @@ article {
 .footer {
   display: flex;
   justify-content: center;
-  max-width: 70rem;
+  max-width: 65rem;
   font-size: 0.8rem;
   color: #3c3b3c;
   margin: 2rem auto;
