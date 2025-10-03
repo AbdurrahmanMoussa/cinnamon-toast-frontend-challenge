@@ -75,26 +75,34 @@ const events = [
 ];
 
 // Get DOM elements for updates
-const $ulElement = document.querySelector(".list");
-const $emptyElement = document.getElementById("empty");
-const $searchElement = document.getElementById("search");
-const $amountElement = document.getElementById("amount");
-const $formElement = document.getElementById("form");
-const $sortElement = document.getElementById("sort");
-const $categoryFilter = document.querySelector(".category-filter-container");
-const $tagFilter = document.querySelector(".tag-filter-container");
+const DOM = {
+  $ulElement: document.querySelector(".list"),
+  $emptyElement: document.getElementById("empty"),
+  $searchElement: document.getElementById("search"),
+  $amountElement: document.getElementById("amount"),
+  $formElement: document.getElementById("form"),
+  $sortElement: document.getElementById("sort"),
+  $categoryFilter: document.querySelector(".category-filter-container"),
+  $tagFilter: document.querySelector(".tag-filter-container"),
+  $tagSelect: document.getElementById("select-tag"),
+  $categorySelect: document.getElementById("events"),
+  $closeCategory: document.getElementById("close-category"),
+  $closeTag: document.getElementById("close-tag"),
+  $categoryTab: document.getElementById("category-tab"),
+  $tagTab: document.getElementById("tag-tab"),
+};
 
 // Show "No results" message if array is empty
 const renderEmptyState = () => {
-  $ulElement.textContent = "";
-  $emptyElement.hidden = false;
-  $amountElement.textContent = "0 results";
+  DOM.$ulElement.textContent = "";
+  DOM.$emptyElement.hidden = false;
+  DOM.$amountElement.textContent = "0 results";
 };
 
 // Update result count and hide empty message
 const updateResultsCount = (count) => {
-  $emptyElement.hidden = true;
-  $amountElement.textContent = `${count} result${count === 1 ? "" : "s"}`;
+  DOM.$emptyElement.hidden = true;
+  DOM.$amountElement.textContent = `${count} result${count === 1 ? "" : "s"}`;
 };
 
 // Create a single tag element
@@ -151,7 +159,7 @@ const createEventElement = (event, index) => {
 // render all events
 const renderEvents = (events) => {
   const frag = document.createDocumentFragment();
-  $ulElement.textContent = "";
+  DOM.$ulElement.textContent = "";
 
   if (!events.length) {
     renderEmptyState();
@@ -165,29 +173,26 @@ const renderEvents = (events) => {
     frag.appendChild($eventElement);
   });
 
-  $ulElement.appendChild(frag);
+  DOM.$ulElement.appendChild(frag);
 };
 
-const $tagSelect = document.getElementById("select-tag");
 const allTags = events.map((ev) => ev.tags).flat();
 
 const uniqueTags = [...new Set(allTags)].sort();
 
 for (const tag of uniqueTags) {
-  $tagSelect.add(new Option(tag));
+  DOM.$tagSelect.add(new Option(tag));
 }
-
-const $categorySelect = document.getElementById("events");
 
 // Extract unique categories from events and sort alphabetically for dropdown
 const uniqueCategories = [...new Set(events.map((ev) => ev.category))].sort();
 
 for (const cat of uniqueCategories) {
-  $categorySelect.add(new Option(cat));
+  DOM.$categorySelect.add(new Option(cat));
 }
 
 // Prevent form submission (keeps search/filter client-side only)
-$formElement.addEventListener("submit", (e) => {
+DOM.$formElement.addEventListener("submit", (e) => {
   e.preventDefault();
 });
 
@@ -196,26 +201,26 @@ let currSearch = "";
 let currTag = "";
 
 // Update UI when tag changes
-$tagSelect.addEventListener("change", (evt) => {
+DOM.$tagSelect.addEventListener("change", (evt) => {
   currTag = evt.target.value;
   updateUI();
 });
 
 // Update UI when category changes
-$categorySelect.addEventListener("change", (evt) => {
+DOM.$categorySelect.addEventListener("change", (evt) => {
   currCategory = evt.target.value;
   updateUI();
 });
 
 // Update UI on search input
-$searchElement.addEventListener("input", (evt) => {
+DOM.$searchElement.addEventListener("input", (evt) => {
   currSearch = evt.target.value.trim().toLowerCase();
   updateUI();
 });
 
 // Update UI on sort
 
-$sortElement.addEventListener("change", () => {
+DOM.$sortElement.addEventListener("change", () => {
   updateUI();
 });
 
@@ -239,17 +244,14 @@ function updateUI() {
     return matchCat && matchSearch && matchTag;
   });
 
-  const $categoryTab = document.getElementById("category-tab");
-  const $tagTab = document.getElementById("tag-tab");
-
   // Show filters only when category is selected
-  $categoryFilter.hidden = !currCategory;
-  if (currCategory) $categoryTab.textContent = currCategory;
+  DOM.$categoryFilter.hidden = !currCategory;
+  if (currCategory) DOM.$categoryTab.textContent = currCategory;
 
-  $tagFilter.hidden = !currTag;
-  if (currTag) $tagTab.textContent = currTag;
+  DOM.$tagFilter.hidden = !currTag;
+  if (currTag) DOM.$tagTab.textContent = currTag;
 
-  const sortKey = $sortElement.value;
+  const sortKey = DOM.$sortElement.value;
 
   // Apply sort if comparator exists
   let resultsSorted = results;
@@ -264,24 +266,20 @@ function updateUI() {
 function closeFilter(type) {
   if (type === "category") {
     currCategory = "";
-    $categorySelect.value = "";
+    DOM.$categorySelect.value = "";
   }
   if (type === "tag") {
     currTag = "";
-    $tagSelect.value = "";
+    DOM.$tagSelect.value = "";
   }
   updateUI();
 }
 
-const $closeCategory = document.getElementById("close-category");
-
 // Clear category on close and reset select value
-$closeCategory.addEventListener("click", () => closeFilter("category"));
-
-const $closeTag = document.getElementById("close-tag");
+DOM.$closeCategory.addEventListener("click", () => closeFilter("category"));
 
 // Clear tag on close and reset select value
-$closeTag.addEventListener("click", () => closeFilter("tag"));
+DOM.$closeTag.addEventListener("click", () => closeFilter("tag"));
 
 // Render events after DOM is loaded
 window.addEventListener("DOMContentLoaded", () => {
