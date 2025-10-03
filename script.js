@@ -84,61 +84,85 @@ const $sortElement = document.getElementById("sort");
 const $categoryFilter = document.querySelector(".category-filter-container");
 const $tagFilter = document.querySelector(".tag-filter-container");
 
-const fetchEvents = (arr) => {
+// Show "No results" message if array is empty
+const renderEmptyState = () => {
+  $ulElement.textContent = "";
+  $emptyElement.hidden = false;
+  $amountElement.textContent = "0 results";
+};
+
+// Update result count and hide empty message
+const updateResultsCount = (count) => {
+  $emptyElement.hidden = true;
+  $amountElement.textContent = `${count} result${count === 1 ? "" : "s"}`;
+};
+
+// Create a single tag element
+const createTagElement = (tag) => {
+  const $tag = document.createElement("span");
+  $tag.classList.add("tag");
+  $tag.textContent = tag;
+  return $tag;
+};
+
+// Create container for all tags in an event
+const createTagsContainer = (tags) => {
+  const $container = document.createElement("div");
+  $container.classList.add("tags");
+  tags.forEach((tag) => {
+    $container.appendChild(createTagElement(tag));
+  });
+  return $container;
+};
+
+// Format date string to localized format
+const options = { year: "numeric", month: "short", day: "numeric" };
+const formatDate = (dateStr) => {
+  return new Date(dateStr).toLocaleDateString(undefined, options);
+};
+
+// Create the full event DOM structure
+// Loop through events to create card structure and add content from events array into html elements
+const createEventElement = (event, index) => {
+  const $li = document.createElement("li");
+  $li.classList.add("list-item");
+
+  /// Stagger item animations (each appears 0.1s after the previous)
+  $li.style.animationDelay = `${index * 0.1}s`;
+
+  const $article = document.createElement("article");
+  const $h3 = document.createElement("h3");
+  const $span = document.createElement("span");
+  const $time = document.createElement("time");
+  const $tags = createTagsContainer(event.tags);
+
+  $h3.textContent = event.title;
+  $span.textContent = event.category;
+
+  $time.setAttribute("datetime", event.date);
+  $time.textContent = formatDate(event.date);
+
+  $article.append($h3, $span, $time, $tags);
+  $li.appendChild($article);
+
+  return $li;
+};
+
+// render all events
+const renderEvents = (events) => {
   const frag = document.createDocumentFragment();
   $ulElement.textContent = "";
 
-  // Show "No results" message if array is empty
-  if (!arr.length) {
-    $emptyElement.hidden = false;
-    $amountElement.textContent = "0 results";
+  if (!events.length) {
+    renderEmptyState();
     return;
   }
 
-  $emptyElement.hidden = true;
+  updateResultsCount(events.length);
 
-  const n = arr.length;
-  $amountElement.textContent = `${n} result${n === 1 ? "" : "s"}`;
-
-  // Loop through events to create card structure and add content from events array into html elements
-  arr.forEach((e, i) => {
-    const $liElement = document.createElement("li");
-    const $articleElement = document.createElement("article");
-    const $h3Element = document.createElement("h3");
-    const $spanElement = document.createElement("span");
-    const $timeElement = document.createElement("time");
-    const $tagsContainer = document.createElement("div");
-    $tagsContainer.classList.add("tags");
-
-    e.tags.forEach((t) => {
-      const $tagElement = document.createElement("span");
-      $tagElement.classList.add("tag");
-      $tagElement.textContent = t;
-      $tagsContainer.appendChild($tagElement);
-    });
-    const options = { year: "numeric", month: "short", day: "numeric" };
-
-    $h3Element.textContent = e.title;
-    $spanElement.textContent = e.category;
-
-    $timeElement.setAttribute("datetime", e.date);
-    $timeElement.textContent = new Date(e.date).toLocaleDateString(
-      undefined,
-      options
-    );
-
-    $articleElement.append(
-      $h3Element,
-      $spanElement,
-      $timeElement,
-      $tagsContainer
-    );
-    $liElement.appendChild($articleElement);
-    $liElement.classList.add("list-item");
-
-    /// Stagger item animations (each appears 0.1s after the previous)
-    $liElement.style.animationDelay = `${i * 0.1}s`;
-    frag.appendChild($liElement);
+  events.forEach((event, index) => {
+    const $eventElement = createEventElement(event, index);
+    frag.appendChild($eventElement);
   });
 
   $ulElement.appendChild(frag);
@@ -234,7 +258,7 @@ function updateUI() {
     resultsSorted = [...results].sort(comparators[sortKey]);
   }
   // Render filtered and sorted events
-  fetchEvents(resultsSorted);
+  renderEvents(resultsSorted);
 }
 
 function closeFilter(type) {
@@ -261,5 +285,5 @@ $closeTag.addEventListener("click", () => closeFilter("tag"));
 
 // Render events after DOM is loaded
 window.addEventListener("DOMContentLoaded", () => {
-  fetchEvents(events);
+  renderEvents(events);
 });
